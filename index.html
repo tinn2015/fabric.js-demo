@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fabric demo</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <div>
+    <button onclick="setMode('')">重置</button>
+    <button onclick="setMode('pan')">移动(pan)</button>
+    <button onclick="setMode('drawing')">自由绘制(drawing)</button>
+    <button onclick="changeBrush('circle')">自由绘制(circleBrush)</button>
+    <button onclick="changeBrush('spray')">自由绘制(sprayBrush)</button>
+    <button onclick="createShape('rect')">rect</button>
+    <button onclick="createShape('circle')">circle</button>
+    <button onclick="createShape('ellipse')">椭圆</button>
+    <!-- <button onclick="changeBrush('eraser')">擦除</button> -->
+    <button onclick="canvasClear()">清除</button>
+  </div>
+  <div>
+    <div>color: <input onchange="getColor()" id="color" type="text"></div>
+    <div>width： <input onchange="getWidth()" id="width" type="text"></div>
+    <button onclick="setModelProps({color, width})">设置属性</button>
+  </div>
+  <canvas id="canvas" class="canvas"></canvas>
+
+  <script src="./lib/fabric.min.js"></script>
+  <script src="./index.js"></script>
+
+  <script>
+    var $ = document.getElementById
+    var color = ''
+    var width = ''
+    function getColor (e) {
+      color = document.getElementById('color').value
+      console.log(color)
+    }
+    function getWidth (e) {
+      width = parseInt(document.getElementById('width').value)
+      console.log(width)
+    }
+
+    function changeBrush (type) {
+      setMode('drawing')
+      setModelProps({color, width, brushType: type})
+    }
+  </script>
+</body>
+</html>
