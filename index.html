@@ -25,15 +25,25 @@
     <div>width： <input onchange="getWidth()" id="width" type="text"></div>
     <button onclick="setModelProps({color, width})">设置属性</button>
   </div>
+  <div>
+    <div>连接socket</div>
+    <div>房间号: <input oninput="getRoom()" id="roomId" type="text"></div>
+    <div>userId <input oninput="getUserId()" id="userId" type="text"></div>
+    <button onclick="connectSocket()">连接</button>
+  </div>
   <canvas id="canvas" class="canvas"></canvas>
 
   <script src="./lib/fabric.min.js"></script>
+  <script src="./lib/socket.io.min.js"></script>
   <script src="./index.js"></script>
+  <script src="./socket.js"></script>
 
   <script>
     var $ = document.getElementById
     var color = ''
     var width = ''
+    var roomId = 1111
+    var userId = 1111
     function getColor (e) {
       color = document.getElementById('color').value
       console.log(color)
@@ -47,6 +57,27 @@
       setMode('drawing')
       setModelProps({color, width, brushType: type})
     }
+
+    
+    // 初始化socket
+    let socket = null
+    function connectSocket (roomId, userId) {
+      socket = new Socket({
+        url: 'ws://localhost:80',
+        query: {roomId, userId}
+      })
+    }
+
+    function getRoom () {
+      roomId = document.getElementById('roomId').value
+      console.log(roomId)
+    }
+
+    function getUserId () {
+      userId = document.getElementById('userId').value
+      console.log(userId)
+    }
+
   </script>
 </body>
 </html>

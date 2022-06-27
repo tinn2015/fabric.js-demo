@@ -1,4 +1,5 @@
 console.log('fabric', fabric)
+
 // 全局状态
 let mousePressed = false // 鼠标按压状态
 let currentMode = '' // 当前的行为
@@ -65,6 +66,7 @@ const shapes = {
       })
       canvas.add(rect)
       canvas.renderAll()
+      socket.draw(JSON.stringify(canvas.toJSON()))
     }
   },
   circle: {
@@ -85,6 +87,7 @@ const shapes = {
         duration: 1000,
         onComplete: () => {}
       })
+      socket.draw(JSON.stringify(canvas.toJSON()))
     }
   },
   ellipse: {
@@ -96,6 +99,7 @@ const shapes = {
       })
       canvas.add(ellipse)
       canvas.renderAll()
+      socket.draw(JSON.stringify(canvas.toJSON()))
     }
   }
 }
@@ -124,6 +128,14 @@ canvas.on('object:modified', (event) => {
   console.log('object:modified', event)
 })
 
+canvas.on('object:added', (event) => {
+  console.log('object:added', event, event.target.toString())
+  // 获取新添加的object
+  // const objects = canvas.getObjects()
+  // const object = objects[objects.length -1]
+  // console.log('objets', objects)
+})
+
 canvas.on('mouse:down', (e) => {
   mousePressed = true
   canvas.setCursor('grab') // 修改画布手势
@@ -134,13 +146,7 @@ canvas.on('mouse:up', (e) => {
   mousePressed = false
   canvas.setCursor('default') // 修改画布手势
   canvas.renderAll()
-
-  // 判断是不是有新的object 或者修改
-  // 获取新添加的object
-  const objects = canvas.getObjects()
-  const object = objects[objects.length -1]
-  console.log('objets', objects)
-  canvas.add(object)
+  socket.draw(JSON.stringify(canvas.toJSON()))
 })
 
 /** ---------------------对外Apis---------------------------------------- */
@@ -168,6 +174,7 @@ function canvasClear () {
       canvas.remove(object)
     }
   })
+  socket.draw(JSON.stringify(canvas.toJSON()))
 }
 
 // 创建Shape
