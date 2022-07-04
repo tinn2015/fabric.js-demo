@@ -63,7 +63,7 @@
     let socket = null
     function connectSocket (roomId, userId) {
       socket = new Socket({
-        url: 'ws://localhost:80',
+        url: 'ws://localhost:8090',
         query: {roomId, userId}
       })
     }

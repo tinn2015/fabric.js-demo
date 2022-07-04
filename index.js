@@ -1,3 +1,4 @@
+
 console.log('fabric', fabric)
 
 // 全局状态
@@ -65,8 +66,8 @@ const shapes = {
         canvas.renderAll()
       })
       canvas.add(rect)
-      canvas.renderAll()
-      socket.draw(JSON.stringify(canvas.toJSON()))
+      renderAll()
+      // socket.draw(JSON.stringify(canvas.toJSON()))
     }
   },
   circle: {
@@ -80,7 +81,7 @@ const shapes = {
         cornerColor: 'white'
       })
       canvas.add(circle)
-      canvas.renderAll()
+      renderAll()
       circle.animate('top', 500, {
         onChange: canvas.renderAll.bind(canvas),
         easing: fabric.util.ease.easeOutBounce(),
@@ -98,21 +99,33 @@ const shapes = {
         ry: 30,
       })
       canvas.add(ellipse)
-      canvas.renderAll()
-      socket.draw(JSON.stringify(canvas.toJSON()))
+      renderAll()
+      // socket.draw(JSON.stringify(canvas.toJSON()))
+
+      // 同步一个object
+      // const objects = canvas.getObjects()
+      // const object = objects[objects.length -1]
+      // syncBoard({
+      //   type: 'ellipse',
+      //   object: JSON.stringify(object),
+      // })
     }
   }
 }
 
 // 添加平移画布功能
 canvas.on('mouse:move', (event) => {
-  if (mousePressed && currentMode === models.pan) {
-    canvas.setCursor('grab') // 修改画布手势
-    canvas.renderAll()
-    const mEvent = event.e
-    const delta = new fabric.Point(mEvent.movementX, mEvent.movementY)
-    canvas.relativePan(delta) // 平移
-  }
+  // if (mousePressed) {
+  //   console.log('mouse:move', event)
+  // }
+  
+  // if (mousePressed && currentMode === models.pan) {
+  //   canvas.setCursor('grab') // 修改画布手势
+  //   canvas.renderAll()
+  //   const mEvent = event.e
+  //   const delta = new fabric.Point(mEvent.movementX, mEvent.movementY)
+  //   canvas.relativePan(delta) // 平移
+  // }
 })
 
 // 监听render事件
@@ -127,6 +140,10 @@ canvas.on('after:render', (event) => {
 canvas.on('object:modified', (event) => {
   console.log('object:modified', event)
 })
+canvas.on('object:moving', (event) => {
+  console.log('object:moving', event)
+  console.log('canvas.Objects', canvas.getObjects())
+})
 
 canvas.on('object:added', (event) => {
   console.log('object:added', event, event.target.toString())
@@ -139,15 +156,16 @@ canvas.on('object:added', (event) => {
 canvas.on('mouse:down', (e) => {
   mousePressed = true
   canvas.setCursor('grab') // 修改画布手势
-  canvas.renderAll()
+  renderAll()
 })
 
 canvas.on('mouse:up', (e) => {
   mousePressed = false
   canvas.setCursor('default') // 修改画布手势
-  canvas.renderAll()
-  socket.draw(JSON.stringify(canvas.toJSON()))
+  renderAll()
+  // socket.draw(JSON.stringify(canvas.toJSON()))
 })
+
 
 /** ---------------------对外Apis---------------------------------------- */
 
@@ -182,3 +200,15 @@ function createShape (shape) {
   shapes[shape].create()
 }
 
+
+// 发送socket
+function syncBoard (obj) {
+  socket.draw(obj)
+}
+
+// render 收口
+function renderAll () {
+  canvas.renderAll()
+  // const canvasJson = canvas.toJSON()
+  // socket.draw({canvasJson})
+}

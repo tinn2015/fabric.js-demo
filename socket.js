@@ -14,8 +14,17 @@ class Socket {
             // const objects = canvas.getObjects()
             // objects.push(data.object)
             // console.log('objects', object, objects)
-            canvas.loadFromJSON(data.object)
+
+            const canvasJson = data.canvasJson
+            canvas.loadFromJSON(canvasJson)
             canvas.renderAll()
+            // if (data.type === 'ellipse') {
+            //     const shape = new fabric.Ellipse(JSON.parse(data.object))
+            //     console.log('shape', shape)
+            //     canvas.add(shape)
+            //     canvas.renderAll()
+            // }
+            
         })
 
         // 接受命令
@@ -28,7 +37,7 @@ class Socket {
         });
     }
     draw (object) {
-        this.socket.emit('draw', {msg: '我是客户端发来的消息', roomId: this.socketValue, object})
+        this.socket.emit('draw', {msg: '我是客户端发来的消息', roomId: this.socketValue, ...object})
     }
     // 发送cmd
     sendCmd () {
